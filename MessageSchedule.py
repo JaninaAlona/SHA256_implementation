@@ -27,7 +27,7 @@ class MessageSchedule:
     def createMSchedules(self, preschedules):
         for full in range(len(preschedules)):
             singleSched = []
-            for word in range(0, 15):
+            for word in range(0, 16):
                 singleWord = preschedules[full][word]
                 singleSched.append(singleWord)
 
@@ -49,6 +49,7 @@ class MessageSchedule:
 
                 singleSched.append(result)
             self.schedules.append(singleSched)
+            print(self.schedules)
 
 
     def binarySum(self, left, right):
