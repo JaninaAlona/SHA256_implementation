@@ -47,7 +47,6 @@ class MessageSchedule:
                 sum2 = self.binarySum(sum1, minus7Word)
                 result = self.binarySum(sum2, s1)
 
-                print(result)
                 singleSched.append(result)
             self.schedules.append(singleSched)
 
@@ -55,23 +54,25 @@ class MessageSchedule:
     def binarySum(self, left, right):
         sum = ""
         carry = "0"
-        oldCarry = "0"
-        firstResult = ""
+        newCarry = "0"
+        result = ""
         for digit in reversed(range(len(left))):
             if left[digit] == right[digit]:
-                firstResult = "0"
+                result = "0"
+                newCarry = "0"
                 if left[digit] == "1":
-                    carry = "1"
+                    newCarry = "1"
             else:
-                firstResult = "1"
-                carry = "0"
-
-            if digit > 0:
-                if firstResult == oldCarry:
-                    sum = "0" + sum
-                else:
-                    sum = "1" + sum
-                oldCarry = carry
+                result = "1"
+                newCarry = "0"
+            if result == "0" and carry == "0":
+                sum = "0" + sum
+            elif result == "1" and carry == "1":
+                sum = "0" + sum
+                newCarry = "1"
+            elif result == "1" and carry == "0" or result == "0" and carry == "1":
+                sum = "1" + sum
+            carry = newCarry
         return sum
 
     def rotateRight(self, offset, word):
