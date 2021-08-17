@@ -31,17 +31,17 @@ class MessageSchedule:
                 singleWord = preschedules[full][word]
                 singleSched.append(singleWord)
 
-            for word in range(16, 64):
-                word7Rot = self.rotateRight(7, preschedules[full][word - 15])
-                word18Rot = self.rotateRight(18, preschedules[full][word - 15])
-                word3Shift = self.shiftRight(3, preschedules[full][word - 15])
+            for word in range(0, 48):
+                word7Rot = self.rotateRight(7, singleSched[len(singleSched) - 15])
+                word18Rot = self.rotateRight(18, singleSched[len(singleSched) - 15])
+                word3Shift = self.shiftRight(3, singleSched[len(singleSched) - 15])
                 s0 = self.xorStr(word7Rot, word18Rot, word3Shift)
-                word17Rot = self.rotateRight(17, preschedules[full][word - 2])
-                word19Rot = self.rotateRight(19, preschedules[full][word - 2])
-                word10Shift = self.shiftRight(10, preschedules[full][word - 2])
+                word17Rot = self.rotateRight(17, singleSched[len(singleSched) - 2])
+                word19Rot = self.rotateRight(19, singleSched[len(singleSched) - 2])
+                word10Shift = self.shiftRight(10, singleSched[len(singleSched) - 2])
                 s1 = self.xorStr(word17Rot, word19Rot, word10Shift)
-                minus16Word = preschedules[full][word - 16]
-                minus7Word = preschedules[full][word - 7]
+                minus16Word = singleSched[len(singleSched) - 16]
+                minus7Word = singleSched[len(singleSched) - 7]
 
                 sum1 = self.binarySum(minus16Word, s0)
                 sum2 = self.binarySum(sum1, minus7Word)
@@ -49,7 +49,7 @@ class MessageSchedule:
 
                 singleSched.append(result)
             self.schedules.append(singleSched)
-            print(self.schedules)
+
 
 
     def binarySum(self, left, right):
