@@ -4,7 +4,9 @@ from MessageSchedule import MessageSchedule
 from Compression import Compression
 from Utilities import Utilities
 
+
 password = "hello world"
+password1 = "abc"
 password2 = "Append 44 bitsthee.435u453lkjhfdsh jhdfjhfdf"
 password3 = "ate new kinds of financial applications. They can be decentralized, meaning that no single entity or person controls them and are nearly impossible to censor."
 
@@ -32,18 +34,56 @@ K = [
     "0x748f82ee", "0x78a5636f", "0x84c87814", "0x8cc70208", "0x90befffa", "0xa4506ceb", "0xbef9a3f7", "0xc67178f2"
 ]
 
-prepro = Preprocessor(password)
-prepro.running()
 
-util = Utilities()
+end = False
+while end == False:
+    menu = input("Press 1 to hash a command line text, press 2 to hash a binary or text file or press 3 to end the program. ")
+    menuNum = int(menu)
+    data = ""
 
-msgSched = MessageSchedule(prepro.chunks, util)
-msgSched.running()
+    if menuNum == 1:
+        data = input("Enter your command line text. ")
+        isFile = False
+    elif menuNum == 2:
+        path = input("Enter your fileName. ")
+        isFile = True
+        bytesFromFile = []
+        f = open(path, "rb")
+        try:
+            byte = f.read(1)
+            while byte != b'':
+                bytesFromFile.append(byte)
+                byte = f.read(1)
+        finally:
+            f.close()
+    elif menuNum == 3:
+        end = True
+
+    prepro = Preprocessor(data, isFile)
+    prepro.running()
+
+    util = Utilities()
+
+    msgSched = MessageSchedule(prepro.chunks, util)
+    msgSched.running()
+
+    compressor = Compression(msgSched.schedules, H, K, util)
+    finalHash = compressor.running()
+    print(finalHash)
 
 
-compressor = Compression(msgSched.schedules, H, K, util)
-finalHash = compressor.running()
-print(finalHash)
+path = "test.txt"
+path1 = "test.docx"
+
+
+
+# word = ""
+# for i in range(len(bytesFromFile)):
+#     letter = bytesFromFile[i].decode('ISO-8859-1')
+#     word = word + letter
+
+
+
 
 
 
