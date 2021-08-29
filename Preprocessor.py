@@ -1,25 +1,37 @@
+import sys
+
 class Preprocessor:
     chunks = []
-    
-    def __init__(self, password):
-        self.password = password
-        self.pwSize = len(self.password)
-        
+    dataSize = 0
+
 
     def convertPwToBin(self, input):
         convertedList = []
+        self.dataSize = len(input)
         for c in input:
             binStr = format(ord(c), 'b')
             filledStr = self.fillUp(binStr)
             convertedList.append(filledStr)
         return convertedList
-    
+
+
+    def convertFileToBin(self, input):
+        convertedList = []
+        self.dataSize = len(input)
+        for byte in input:
+            binStr = bin(int.from_bytes(byte, byteorder=sys.byteorder))[2:]
+            filledStr = self.fillUp(binStr)
+            convertedList.append(filledStr)
+
+        return convertedList
+
     def fillUp(self, characts):
         if len(characts) <= 8:
             more0 = 8 - len(characts) 
             for i in range(0, more0):
                 characts = "0" + characts
         return characts
+
 
     def toChunksForwards(self, rawData, offset):
         div = int(len(rawData) / offset) + 1
@@ -74,7 +86,7 @@ class Preprocessor:
 
 
     def addSizeInfo(self):
-        dataSize = "{0:b}".format(self.pwSize * 8)
+        dataSize = "{0:b}".format(self.dataSize * 8)
         addSizeData = self.toChunksBackwards(dataSize, 8)
 
         missingPad = 8 - len(addSizeData)
@@ -88,7 +100,6 @@ class Preprocessor:
         self.chunks[len(self.chunks) - 1] = lastChunk
 
 
-
     def addPadding(self):
         lastChunk = self.chunks[len(self.chunks) - 1]
         if len(lastChunk) <= 55:
@@ -98,24 +109,32 @@ class Preprocessor:
                 lastChunk.append("00000000")
             self.chunks[len(self.chunks) - 1] = lastChunk
         else:
-            start = 0
             if len(lastChunk) <= 63:
                 lastChunk.append("10000000")
-                missingPad = 64 - (len(lastChunk) + 1)
-                for i in range(missingPad):
+                missingPadLastChunk = 64 - len(lastChunk)
+                for i in range(missingPadLastChunk):
                     lastChunk.append("00000000")
                 self.chunks[len(self.chunks) - 1] = lastChunk
+                newChunk = []
+                for new in range(56):
+                    newChunk.append("00000000")
+                self.chunks.append(newChunk)
             else:
-                start = 1
                 newChunk = []
                 newChunk.append("10000000")
-                for i in range(start, 56):
+                for i in range(1, 56):
                     newChunk.append("00000000")
                 self.chunks.append(newChunk)
 
 
-    def running(self):
-        rawData = self.convertPwToBin(self.password)
+    def running(self, data, isFile):
+        self.chunks.clear()
+
+        if isFile == True:
+            rawData = self.convertFileToBin(data)
+        else:
+            rawData = self.convertPwToBin(data)
+
         self.chunks = self.toChunksForwards(rawData, 64)
         self.addPadding()
         self.addSizeInfo()

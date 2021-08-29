@@ -1,12 +1,10 @@
-from Utilities import Utilities
-
 class MessageSchedule:
     chunks = []
     schedules = []
+
     util = ()
 
-    def __init__(self, chunks, util):
-        self.chunks = chunks
+    def __init__(self, util):
         self.util = util
 
     def to32BitWords(self):
@@ -18,13 +16,6 @@ class MessageSchedule:
                 for single4 in range(0, 4):
                     word = word + self.chunks[full][in8 + single4]
                 singlePreSchedule.append(word)
-            if (len(singlePreSchedule) < 64):
-                initShedSize = len(singlePreSchedule)
-                for in8 in range(initShedSize, 64):
-                    word0 = ""
-                    for only0 in range(32):
-                        word0 = word0 + "0"
-                    singlePreSchedule.append(word0)
             preschedules.append(singlePreSchedule)
         return preschedules
 
@@ -55,6 +46,9 @@ class MessageSchedule:
             self.schedules.append(singleSched)
 
 
-    def running(self):
+    def running(self, chunks):
+        self.chunks.clear()
+        self.schedules.clear()
+        self.chunks = chunks
         preschedules = self.to32BitWords()
         self.createMSchedules(preschedules)

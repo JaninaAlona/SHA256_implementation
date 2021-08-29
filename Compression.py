@@ -2,10 +2,10 @@ class Compression:
     messageSched = []
     hashValues = []
     roundConst = []
+
     util = ()
 
-    def __init__(self, messageSched, hashValues, roundConst, util):
-        self.messageSched = messageSched
+    def __init__(self, hashValues, roundConst, util):
         self.hashValues.append("{0:032b}".format(int(hashValues[0], 16)))
         self.hashValues.append("{0:032b}".format(int(hashValues[1], 16)))
         self.hashValues.append("{0:032b}".format(int(hashValues[2], 16)))
@@ -16,6 +16,7 @@ class Compression:
         self.hashValues.append("{0:032b}".format(int(hashValues[7], 16)))
         self.roundConst = roundConst
         self.util = util
+
 
     def compressionLoop(self):
         for full in range(len(self.messageSched)):
@@ -64,7 +65,9 @@ class Compression:
             self.hashValues[7] = h7
 
 
-    def running(self):
+    def running(self, messageSched):
+        self.messageSched.clear()
+        self.messageSched = messageSched
         self.compressionLoop()
         finalHash = ""
         for hash in range(0, len(self.hashValues)):
