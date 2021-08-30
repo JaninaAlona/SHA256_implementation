@@ -32,36 +32,44 @@ K = [
 
 
 end = False
-path = "test.txt"
-path1 = "test.docx"
-prepro = Preprocessor()
-util = Utilities()
-msgSched = MessageSchedule(util)
-compressor = Compression(H, K, util)
-finalHash = ""
+menuNum = 0
+# path = "test.txt"
+# path1 = "test.docx"
 
 
 while end == False:
-    menu = input("Press 1 to hash a command line text, press 2 to hash a binary or text file or press 3 to end the program. ")
-    menuNum = int(menu)
+    try:
+        menu = input("Press 1 to hash a command line text, press 2 to hash a binary or text file or press 3 to end the program. ")
+        menuNum = int(menu)
+    except ValueError:
+        print("This is not a number")
 
     if menuNum == 1:
         consoleStr = input("Enter your command line text. ")
         isFile = False
 
+        prepro = Preprocessor()
+        util = Utilities()
+        msgSched = MessageSchedule(util)
+        compressor = Compression(H, K, util)
+        finalHash = ""
         prepro.running(consoleStr, isFile)
         msgSched.running(prepro.chunks)
         finalHash = compressor.running(msgSched.schedules)
+
         print(finalHash)
         finalHash = ""
         consoleStr = ""
-
+        del prepro
+        del util
+        del msgSched
+        del compressor
 
     elif menuNum == 2:
-        #path = input("Enter your fileName. ")
+        path = input("Enter your fileName. ")
         isFile = True
         bytesFromFile = []
-        f = open(path1, "rb")
+        f = open(path, "rb")
         try:
             byte = f.read(1)
             while byte != b'':
@@ -70,15 +78,26 @@ while end == False:
         finally:
             f.close()
 
+        prepro = Preprocessor()
+        util = Utilities()
+        msgSched = MessageSchedule(util)
+        compressor = Compression(H, K, util)
+        finalHash = ""
         prepro.running(bytesFromFile, isFile)
         msgSched.running(prepro.chunks)
         finalHash = compressor.running(msgSched.schedules)
+
         print(finalHash)
         finalHash = ""
         bytesFromFile.clear()
+        del prepro
+        del util
+        del msgSched
+        del compressor
 
     elif menuNum == 3:
         end = True
+        break
 
 
 

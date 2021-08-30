@@ -6,6 +6,8 @@ class Compression:
     util = ()
 
     def __init__(self, hashValues, roundConst, util):
+        self.hashValues.clear()
+        self.roundConst.clear()
         self.hashValues.append("{0:032b}".format(int(hashValues[0], 16)))
         self.hashValues.append("{0:032b}".format(int(hashValues[1], 16)))
         self.hashValues.append("{0:032b}".format(int(hashValues[2], 16)))
