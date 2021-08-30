@@ -2,11 +2,11 @@
 
 This is an Python implementation of the SHA256 hashing algorithm.
 
-Execute SHA256 Windows service for testing:
-Get-FileHash <file>
+Execute SHA256 Windows Powershell command for testing:
+Get-FileHash
 
-Linux:
-sha256sum <file>
+on Linux:
+sha256sum 
 
 https://qvault.io/cryptography/how-sha-2-works-step-by-step-sha-256/
 
