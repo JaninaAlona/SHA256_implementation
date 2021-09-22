@@ -73,6 +73,7 @@ while end == False:
         try:
             byte = f.read(1)
             while byte != b'':
+                print(byte)
                 bytesFromFile.append(byte)
                 byte = f.read(1)
         finally:

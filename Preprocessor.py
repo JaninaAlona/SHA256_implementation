@@ -7,26 +7,28 @@ class Preprocessor:
 
     def convertPwToBin(self, input):
         convertedList = []
-        self.dataSize = len(input)
+        byteList = []
         for c in input:
-            binStr = format(ord(c), 'b')
-            filledStr = self.fillUp(binStr)
-            convertedList.append(filledStr)
+            encBytes = bytes(c.encode("utf-8"))
+            for i in range(len(encBytes)):
+                binStr = bin(encBytes[i])[2:]
+                filledStr = self.fillUp(binStr)
+                convertedList.append(filledStr)
+        self.dataSize = len(convertedList)
         return convertedList
 
 
     def convertFileToBin(self, input):
         convertedList = []
         self.dataSize = len(input)
-        for byte in input:
-            binStr = bin(int.from_bytes(byte, byteorder=sys.byteorder))[2:]
+        for b in input:
+            binStr = bin(int.from_bytes(b, byteorder=sys.byteorder))[2:]
             filledStr = self.fillUp(binStr)
             convertedList.append(filledStr)
-
         return convertedList
 
     def fillUp(self, characts):
-        if len(characts) <= 8:
+        if len(characts) < 8:
             more0 = 8 - len(characts) 
             for i in range(0, more0):
                 characts = "0" + characts
